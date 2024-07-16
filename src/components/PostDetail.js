@@ -6,6 +6,10 @@ import Swal from 'sweetalert2';
 import { FaRegEdit } from "react-icons/fa";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import EditPost from '../components/EditPost';
+import DeletePost from '../components/DeletePost';
+import EditComment from '../components/EditComment';
+import DeleteComment from '../components/DeleteComment';
+
 
 const fetchPostUrl = (id) => `${process.env.REACT_APP_API_BASE_URL}/posts/getPost/${id}`;
 
@@ -103,19 +107,18 @@ export default function PostDetail() {
                             user.id === postDetail.author._id ?
                                 <div className="d-flex justify-content-end">
                                     <EditPost postDetail={postDetail} fetchData={fetchData}/>
-                                    
-                                    <Link className="text-danger icon-size"><RiDeleteBin5Line /></Link>
+                                    <DeletePost postDetail={postDetail} fetchData={fetchData}/>
                                 </div>
                                 
                             :
                                 user.isAdmin ?
                                     <div className="d-flex justify-content-end">
-                                        <Link className="text-danger icon-size"><RiDeleteBin5Line /></Link>
+                                        <DeletePost postDetail={postDetail} fetchData={fetchData}/>
                                     </div>
                                 :
                                     <div className="d-flex justify-content-end"></div>
                         }
-                        <Card.Text>{postDetail.content}</Card.Text>
+                        <Card.Text className="pt-5">{postDetail.content}</Card.Text>
                         <Card.Subtitle className="card-subtitle pt-5">Author:</Card.Subtitle>
                         <Card.Text>{postDetail.author.userName}</Card.Text>
                         <Card.Subtitle className="card-subtitle pt-5">Comments:</Card.Subtitle>
@@ -129,13 +132,13 @@ export default function PostDetail() {
                                             {
                                                 user.id === comment.author._id ?
                                                     <div className="d-flex justify-content-end">
-                                                        <Link className="text-primary me-3 icon-size"><FaRegEdit /></Link>
-                                                        <Link className="text-danger icon-size"><RiDeleteBin5Line /></Link>
+                                                        <EditComment commentId={comment._id} fetchData={fetchData}/>
+                                                        <DeleteComment commentId={comment._id} fetchData={fetchData}/>
                                                     </div>
                                                 :
                                                     user.isAdmin ?
                                                         <div className="d-flex justify-content-end">
-                                                            <Link className="text-danger icon-size"><RiDeleteBin5Line /></Link>
+                                                            <DeleteComment commentId={comment._id} fetchData={fetchData}/>
                                                         </div>
                                                     :
                                                         <div className="d-flex justify-content-end"></div>

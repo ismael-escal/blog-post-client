@@ -4,17 +4,16 @@ import Swal from 'sweetalert2';
 import { FaRegEdit } from "react-icons/fa";
 
 
-export default function EditPost({postDetail, fetchData}) {
+export default function EditComment({commentId, fetchData}) {
 
-	const [title, setTitle] = useState('');
-	const [content, setContent] = useState('');
+	const [comment, setComment] = useState('');
 
 	const [showEdit, setShowEdit] = useState(false);
 
-	const openEdit = (postId) => {
+	const openEdit = (commentId) => {
 
 
-		fetch(`${process.env.REACT_APP_API_BASE_URL}/posts/getPost/${postId}`,{
+		fetch(`${process.env.REACT_APP_API_BASE_URL}/comments/getComment/${commentId}`,{
 			headers: {
 				Authorization: `Bearer ${localStorage.getItem('token')}`
 			}
@@ -23,9 +22,7 @@ export default function EditPost({postDetail, fetchData}) {
 		.then(data => {
 
 			//console.log(data);
-
-			setTitle(data.post.title);
-			setContent(data.post.content);
+			setComment(data.comment.comment);
 		})
 
 		setShowEdit(true);
@@ -35,34 +32,32 @@ export default function EditPost({postDetail, fetchData}) {
 
 		setShowEdit(false);
 
-		setTitle('');
-		setContent('');
+		setComment('');
 	}
 
-	const editPost = (e, postId) => {
+	const editComment = (e, commentId) => {
 
 		e.preventDefault();
 
-		fetch(`${process.env.REACT_APP_API_BASE_URL}/posts/updatePost/${postId}`, {
+		fetch(`${process.env.REACT_APP_API_BASE_URL}/comments/updateComment/${commentId}`, {
 			method: "PATCH",
 			headers: {
 				'Content-Type': 'application/json',
 				Authorization: `Bearer ${localStorage.getItem('token')}`
 			},
 			body: JSON.stringify({
-				title,
-				content
+				comment
 			})
 		})
 		.then(res => res.json())
 		.then(data => {
 
-			if(data.message === 'Post updated successfully') {
+			if(data.message === 'Comment updated successfully') {
 
 				Swal.fire({
                     title: 'Success!',
                     icon: 'success',
-                    text: 'Post Successfully Updated'
+                    text: 'Comment Successfully Updated'
                 })
 
                 closeEdit();
@@ -85,22 +80,18 @@ export default function EditPost({postDetail, fetchData}) {
 
 	return(
 		<>
-			<Button className="icon-size mx-2" variant="primary" onClick={() => openEdit(postDetail._id)}><FaRegEdit /></Button>
+			<Button className="icon-size mx-2" variant="primary" onClick={() => openEdit(commentId)}><FaRegEdit /></Button>
 
 
 			<Modal show={showEdit} onHide={closeEdit}>
-				<Form onSubmit={e => editPost(e, postDetail._id)} className="form-body">
+				<Form onSubmit={e => editComment(e, commentId)} className="form-body">
 					<Modal.Header closeButton>
-						<Modal.Title>Edit Blog</Modal.Title>
+						<Modal.Title>Edit Comment</Modal.Title>
 					</Modal.Header>
 					<Modal.Body>
 						<Form.Group>
-							<Form.Label>Title</Form.Label>
-							<Form.Control type="text" value={title} onChange={e => setTitle(e.target.value)} required />
-						</Form.Group>
-						<Form.Group>
-							<Form.Label>Content</Form.Label>
-							<Form.Control as="textarea" value={content} onChange={e => setContent(e.target.value)} required />
+							<Form.Label>Comment</Form.Label>
+							<Form.Control type="text" value={comment} onChange={e => setComment(e.target.value)} required />
 						</Form.Group>
 					</Modal.Body>
 					<Modal.Footer>
